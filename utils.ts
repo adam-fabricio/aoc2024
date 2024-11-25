@@ -1,7 +1,7 @@
 export interface ParseDict {
   [chave: string]: {
     [field: string]: number;
-  }
+  };
 }
 
 /**
@@ -22,7 +22,6 @@ export function parsingDict(
   valorIndices: number[],
   campoChave?: number,
 ): ParseDict {
-
   const objeto: ParseDict = {};
   input.split("\n").forEach((linha) => {
     const campo = linha.split(" ");
@@ -41,11 +40,10 @@ export function parsingDict(
 
 /**
  * Função para ler um arquivo relativo a url e retorna o conteudo do arquivo
- * 
+ *
  * @param nome - Nome do arquivo "test.txt ou input.txt"
  * @param baseUrl - O caminho da pasta onde estará o arquivo
  * @returns O conteúdo do arquivo como uma string.
- *
  */
 
 export function leArquivo(nome: string, baseUrl: string): string {
