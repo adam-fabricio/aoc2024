@@ -2,20 +2,27 @@
 
 import "@std/dotenv/load";
 
-async function pegaEntrada(dia: number = 1, ano: string = "2024"): Promise<string> {
+async function pegaEntrada(
+  dia: number = 1,
+  ano: string = "2024",
+): Promise<string> {
   const sessionCookie = Deno.env.get("SESSION_COOKIE");
   const url = `https://adventofcode.com/${ano}/day/${dia}/input`;
   const result = await fetch(url, {
     headers: {
-      Cookie: `session=${sessionCookie}`
+      Cookie: `session=${sessionCookie}`,
     },
   });
   return result.text();
 }
 
-async function gravaArquivo(dia: number, tipo: string, conteudo: string): Promise<void> {
+async function gravaArquivo(
+  dia: number,
+  tipo: string,
+  conteudo: string,
+): Promise<void> {
   const diretorio = dia < 10 ? `dia0${dia}` : `dia${dia}`;
-  
+
   let arquivo: string = "";
   switch (tipo) {
     case "entrada":
@@ -33,22 +40,22 @@ async function gravaArquivo(dia: number, tipo: string, conteudo: string): Promis
 
   const caminhoArquivo = `${diretorio}\\${arquivo}`;
   console.log(caminhoArquivo);
-  
 
   try {
     const dirInfo = await Deno.stat(diretorio);
     if (!dirInfo.isDirectory) {
-      throw new Error(`${diretorio} existe mas não é um diretorio`)
-    }1
+      throw new Error(`${diretorio} existe mas não é um diretorio`);
+    }
+    1;
   } catch {
     console.log(`criando diretório ${diretorio}...`);
-    await Deno.mkdir(diretorio, { recursive: true});
+    await Deno.mkdir(diretorio, { recursive: true });
   }
 
   try {
     await Deno.stat(caminhoArquivo);
     console.log(
-      `O arquivo ${caminhoArquivo} ja existe. Deseja substituir? (s/N):`
+      `O arquivo ${caminhoArquivo} ja existe. Deseja substituir? (s/N):`,
     );
     const resposta = prompt();
     if (resposta?.toLowerCase() !== "s") {
@@ -77,9 +84,9 @@ if (import.meta.main) {
   const arquivos = [
     ["entrada", await pegaEntrada(dia, ano)],
     ["esqueleto", esqueleto],
-    ["test", ""]
-  ]
-  
+    ["test", ""],
+  ];
+
   for (const arquivo of arquivos) {
     await gravaArquivo(dia, arquivo[0], arquivo[1]);
   }
