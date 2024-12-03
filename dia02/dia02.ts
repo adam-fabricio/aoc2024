@@ -6,11 +6,28 @@ function solver(input: string, part: number) {
   let result = 0
   input.split("\n").forEach((linha) => {
     const listaLinha = linha.split(' ').map(Number);
-    if (listaLinha.every((val, i) => i === 0 || i === (listaLinha.length - 1) || (listaLinha[i - 1] < val && Math.abs(listaLinha[i - 1] - val) < 4) || (listaLinha[i - 2] < val && Math.abs(listaLinha[i - 2] - val) < 4))) {
-      result += 1;
-    } else if (listaLinha.every((val, i) => i === 0 || (listaLinha[i - 1] > val && Math.abs(listaLinha[i - 1] - val) < 4) || (listaLinha[i - 2] > val && Math.abs(listaLinha[i - 2] - val) < 4))) {
-      result += 1;
+    if (part === 1) {
+      if (listaLinha.every((val, i) => i === 0 || (listaLinha[i - 1] < val && Math.abs(listaLinha[i - 1] - val) < 4))) {
+        result += 1;
+      } else if (listaLinha.every((val, i) => i === 0 || (listaLinha[i - 1] > val && Math.abs(listaLinha[i - 1] - val) < 4))) {
+        result += 1;
+      }
+    } else {
+      // ascendente
+      let flag = 0;
+      for (let i = 0; i < listaLinha.length; i++) {
+        if (listaLinha[i-1] < listaLinha[i]) {
+          continue;
+        } else if (listaLinha[i-1] )  {
+
+          flag += 1
+        }
+
+
+        console.log(i)
+      }
     }
+    
   });
   return result;
 }
