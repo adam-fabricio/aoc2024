@@ -35,69 +35,71 @@ function parsingPaginas(rawPaginas: string): number[][] {
   return paginas;
 }
 
-
-function ordena(lista: number[], regras: DicionarioRegras ): number[] {
+function ordena(lista: number[], regras: DicionarioRegras): number[] {
   for (let i = 0; i < lista.length; i++) {
-      const listaAnterior = lista.slice(0, i);
-      const listaPosterior = lista.slice(i + 1);
-      const regra = regras[lista[i]]
-      
-      for (const pagina of regra.anterior) {
-        const idx = listaPosterior.findIndex((item) => item === pagina);
+    const listaAnterior = lista.slice(0, i);
+    const listaPosterior = lista.slice(i + 1);
+    const regra = regras[lista[i]];
 
-        if (idx !== -1) {
-          [lista[i], lista[i + idx + 1]] = [lista[i + idx + 1], lista[i]]
-          ordena(lista, regras)
-        }
+    for (const pagina of regra.anterior) {
+      const idx = listaPosterior.findIndex((item) => item === pagina);
+
+      if (idx !== -1) {
+        lista = [
+          ...listaAnterior,
+          pagina,
+          lista[i],
+          ...listaPosterior.slice(0, idx),
+          ...listaPosterior.slice(idx + 1),
+        ];
+        i = -1;
+        break;
       }
     }
-  return lista
+  }
+  return lista;
 }
-
 
 function solver(input: string, part: number) {
   const [rawRegras, rawPaginas] = input.split("\n\n");
 
   const regras: DicionarioRegras = parsingRegras(rawRegras);
   const paginas: number[][] = parsingPaginas(rawPaginas);
-  
-  let result = 0
-  let result2 = 0
-  
+
+  let result = 0;
+  let result2 = 0;
 
   paginas.forEach((linha, indice) => {
     let flag = 0;
     for (let i = 0; i < linha.length; i++) {
       const listaAnterior = linha.slice(0, i);
       const listaPosterior = linha.slice(i + 1);
-      const regra = regras[linha[i]]
+      const regra = regras[linha[i]];
 
-      let ordemCorreta: boolean = !(listaAnterior.some((pagina) => !regra.anterior.includes(pagina)));
+      let ordemCorreta: boolean = !(listaAnterior.some((pagina) =>
+        !regra.anterior.includes(pagina)
+      ));
       if (!ordemCorreta) {
-        flag = 1
-        //console.log(linha)
-        //ordena(linha, regras)
-        //console.log(linha)
-        break
-
+        flag = 1;
+        break;
       }
-      ordemCorreta = !(listaPosterior.some((pagina) => !regra.posterior.includes(pagina)));
+      ordemCorreta = !(listaPosterior.some((pagina) =>
+        !regra.posterior.includes(pagina)
+      ));
       if (!ordemCorreta) {
-        ordena(linha, regras)
-        console.log(linha)
-        flag = 1
-        break
+        linha = ordena(linha, regras);
+        flag = 1;
+        break;
       }
     }
-    const i = Math.floor(linha.length / 2)
+    const i = Math.floor(linha.length / 2);
     if (!flag) {
       result += linha[i];
     } else {
       result2 += linha[i];
     }
-    
   });
-  
+
   if (part === 1) {
     return result;
   } else {
@@ -105,8 +107,8 @@ function solver(input: string, part: number) {
   }
 }
 
-const entrada = "test.in";
+const entrada = "input.in";
 const input: string = leArquivo(entrada, import.meta.url);
 
 console.log("parte 1:", solver(input, 1));
-console.log('parte 2:', solver(input, 2));
+console.log("parte 2:", solver(input, 2));
