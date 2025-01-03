@@ -58,20 +58,15 @@ function solver(input: string, part: number) {
       currentBlock += len
     });
 
-    console.log(disk)
     
     for ( let i = disk.length - 1; i > 0; i--) {
-      console.log("***", i, disk[i])
       if (disk[i].id === -1) {
         continue
       }
-      console.log("--->", i, disk[i])
       let j = 0
       
       while (i >= j) {
         if (disk[j].id === -1 && disk[j].len >= disk[i].len) {
-          console.log("J", disk[j])
-          console.log("I", disk[i])
           const fileBlock: DiskStructure = {initialBlock: disk[j].initialBlock, len: disk[i].len, id: disk[i].id};
           if (disk[i].len !== disk[j].len) {
             const emptyBlock: DiskStructure = {initialBlock: disk[j].initialBlock + disk[i].len, len: disk[j].len - disk[i].len, id: -1};
@@ -80,20 +75,25 @@ function solver(input: string, part: number) {
           } else {
             disk = [...disk.slice(0,j), fileBlock, ...disk.slice(j+1, i), ...disk.slice(i +1)]
           }
-          console.log(disk.length, disk)
           break
         }
         j++
       }
     }
 
+    return disk.reduce((acc, block) => {
+      if (block.id === -1) return acc;
 
-    return 2;
+      for (let i = block.initialBlock; i < block.initialBlock + block.len; i++) {
+        acc += block.id * i
+      }
+      return acc;
+    }, 0);
   }
 }
 
-const entrada = "test.in";
+const entrada = "input.in";
 const input: string = leArquivo(entrada, import.meta.url);
 
-//console.log("parte 1:", solver(input, 1));
+console.log("parte 1:", solver(input, 1));
 console.log("parte 2:", solver(input, 2));
